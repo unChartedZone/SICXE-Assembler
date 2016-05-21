@@ -1,0 +1,49 @@
+			 **source_files/practiceWorksheet.asm**
+Line #       Address      Label        Opcode       Operand      Machine Code 
+======       =======      =====        ======       =======      ============ 
+1            00000        prog         start        0                         
+2            00000        bsrch        equ          6000                      
+3            00000        offb         equ          8                         
+4            00000                     base         delta                     
+5            00000                     ldb          #delta       6923D9       
+6            00003                     lds          #3           6D0003       
+7            00006                     +ldx         @FOO         00160F9D     
+8            0000A                     +lda         beta,x                    
+9            0000E                     add          gamma        1B229C       
+10           00011                     ldx          @zeta        0623C8       
+11           00014        first        NORM                      C8           
+12           00015                     SVC          13           B000         
+13           00017                     HIO                       F4           
+14           00018                     ldt          #alpha       752055       
+15           0001B                     +ldt         #FOO         75100F9D     
+16           0001F                     LDA          @alpha       022033       
+17           00022                     LDA          @FOO         022F78       
+18           00025                     addr         s,t          9040         
+19           00027                     shiftr       t,2          A800         
+20           00029                     shiftl       s,1          A440         
+21           0002B                     tixr         t            B800         
+22           0002D                     j            first        FFFFFFE4     
+23           00030                     +j           first        3F100014     
+24           00034                     clear        T            B400         
+25           00036                     +ldt         #50000       7500D350     
+26           0003A                     ldx          #0           050000       
+27           0003D                     +jsub        bsrch        4B101770     
+28           00041        addl         lda          alpha,x                   
+29           00044                     add          beta,x                    
+30           00047                     sta          gamma,x                   
+31           0004A                     addr         s,t          9040         
+32           0004C                     compr        x,t          A010         
+33           0004E                     +jlt         addl         3B100041     
+34           00052                     jlt          addl         FFFFFFEC     
+35           00055                                                            
+36           00055        alpha        resw         100                       
+37           00181        beta         resw         100                       
+38           002AD        gamma        resw         100                       
+39           003D9        delta        word         20                        
+40           003DC        zeta         byte         C'EOF'                    
+41           003DF        eta          byte         x'FFFFFE'                 
+42           003E2        theta        byte         c'eof'                    
+43           003E5        buffer       resb         3000                      
+44           00F9D        FOO          word         1                         
+45           00FA0                     end          prog                      
+46           00FA0                                                            
