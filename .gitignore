@@ -1,3 +1,4 @@
 sicxe_asm
 *.o
 *.swp
+.vscode/
