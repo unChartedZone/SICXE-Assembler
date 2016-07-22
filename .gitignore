@@ -3,3 +3,5 @@ sicxe_asm
 *.swp
 .vscode/
 .idea/
+*.lis
+*.obj
