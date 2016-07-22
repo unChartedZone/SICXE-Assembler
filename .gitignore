@@ -1,4 +1,4 @@
 sicxe_asm
 *.o
 .vscode/
-
+.idea/
