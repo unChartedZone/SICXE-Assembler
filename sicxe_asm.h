@@ -149,6 +149,14 @@ class sicxe_asm {
 
 		void print_error(char,string,unsigned int);
 
+		/*********Expression Mehtods*********/
+
+		bool find_and_calculate(string,int&);
+		int convert_value_to_int(string);
+		int calculate(int,int,char);
+
+		/************************************/
+
 		/*********Output File Method*********/
 		//a modified version of print_file from the file_parser class,
 		//used for writing to the .lis file
@@ -169,9 +177,9 @@ class sicxe_asm {
 		//Used in text record to insert the lenght of the machine codes of the record into the line
 		//and the line is then inserted into the object file
 		void write_text_line(ofstream &exe_file, string line);
-	/****************************************/
-	void check_for_reserve(string line, ofstream &exe_file, int &counter, bool &reserve_detected);
-	void create_mod_data(int line_num, string size, string operand);
+		/****************************************/
+		void check_for_reserve(string line, ofstream &exe_file, int &counter, bool &reserve_detected);
+		void create_mod_data(int line_num, string size, string operand);
 };
 
 #endif

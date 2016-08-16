@@ -579,7 +579,10 @@ void sicxe_asm::immediate_addressing(int line_num,int size, string machine_code,
     string temp = operand.substr(1);
     int instruction  = convert_machine_code(machine_code);
     instruction = instruction << 16 | ibit;
-    int TA = symbols.get_value(temp);
+    int TA = 0;
+//    int TA = symbols.get_value(temp);
+    if(find_and_calculate(temp,TA));
+    else TA = symbols.get_value(temp);
     string mcode = "";
     if(TA == -1) {
         is_valid(line_num,temp,true,size);
@@ -620,7 +623,10 @@ void sicxe_asm::immediate_addressing(int line_num,int size, string machine_code,
 void sicxe_asm::indirect_addressing(int line_num,int size,string machine_code, string operand) {
     string mcode = "";
     string temp = operand.substr(1);
-    int TA = symbols.get_value(temp);
+    int TA = 0;
+    if(find_and_calculate(temp,TA));
+    else TA = symbols.get_value(temp);
+//    int TA = symbols.get_value(temp);
     int instruction = convert_machine_code(machine_code);
     instruction = instruction << 16 | nbit;
     if(TA == -1) {
@@ -664,7 +670,10 @@ void sicxe_asm::indexed_addressing(int line_num,int size,int comma_loc,string ma
         message = "Index flag missing from operand " + operand + " on line ";
         print_error('f',message,line_num);
     }
-    int TA = symbols.get_value(temp);
+    int TA = 0;
+    if(find_and_calculate(temp,TA));
+    else TA = symbols.get_value(temp);
+//    int TA = symbols.get_value(temp);
     int instruction = convert_machine_code(machine_code);
     instruction = instruction << 16 | nbit | ibit | xbit;
     string mcode = "";
@@ -705,8 +714,11 @@ void sicxe_asm::indexed_addressing(int line_num,int size,int comma_loc,string ma
 void sicxe_asm::direct_addressing(int line_num, int size,string machine_code,string operand) {
     string mcode = "";
     int instruction = convert_machine_code(machine_code);
+    int TA = 0;
+    if(find_and_calculate(operand,TA));
+    else TA = symbols.get_value(operand);
     instruction = instruction << 16 | nbit | ibit;
-    int TA = symbols.get_value(operand);
+//    int TA = symbols.get_value(operand);
     if(operand == "") {
         string mcode = format_hex_number(instruction,6);
         object_codes.push_back(mcode);
@@ -1282,4 +1294,71 @@ void sicxe_asm::print_error(char type,string s,unsigned int line_number) {
         default:
             return;
     }
+}
+
+bool sicxe_asm::find_and_calculate(string operand, int& result) {
+    string valid_operators = "+-*/";
+    bool operator_found = false;
+    queue<int> variables;
+    queue<char> operators;
+    // variables.clear();
+    // operators.clear();
+
+    int i = 0; //Counter for while loop
+    while(!operand.empty()) {
+        char current_char = operand[i];
+        int current_pos = valid_operators.find(current_char);
+        if(current_pos != -1) {
+            operator_found = true;
+            string temp = operand.substr(0,i);
+            int num = convert_value_to_int(temp);
+            variables.push(num);
+            operators.push(current_char);
+            operand.erase(0,i+1);
+            i = 0;
+            continue;
+        }
+        //To get last number
+        if(i == (operand.length() - 1)) {
+            string temp = operand;
+            int num = convert_value_to_int(temp);
+            variables.push(num);
+            break;
+        }
+        i++;
+    }
+    if(operator_found) {
+        //Calculate expression
+       while(!variables.empty()) {
+           int current1 = variables.front();
+           variables.pop();
+           int current2 = variables.front();
+           variables.pop();
+           char current_op = operators.front();
+           operators.pop();
+           result = result + calculate(current1,current2,current_op); //Result should be zero intially
+       }
+        return true;
+    }
+    return false; //result variable should be unchanged then
+}
+
+int sicxe_asm::convert_value_to_int(string value) {
+    int check = symbols.get_value(value);
+    if(check == -1) {
+        int num = string_to_int(value);
+        return num;
+    }
+    return check;
+}
+
+int sicxe_asm::calculate(int num1,int num2, char current_op) {
+    if(current_op == '+')
+        return num1 + num2;
+    if(current_op == '-')
+        return num1 - num2;
+    if(current_op == '*')
+        return num1 * num2;
+    if(current_op == '/')
+        return num1/num2;
 }
