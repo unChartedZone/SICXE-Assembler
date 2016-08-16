@@ -1,5 +1,8 @@
 sicxe_asm
 *.o
+*.swp
 .vscode/
 .idea/
+*.lis
+*.obj
 tags
