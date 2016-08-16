@@ -14,7 +14,7 @@ first          NORM
                 SVC            13
                 HIO
                 BASE           foo
-                +ldb           #foo+3
+                +ldb           #foo
                 ldt            #alpha
                 +ldt           #foo
                 lda            @alpha
